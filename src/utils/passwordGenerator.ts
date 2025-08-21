@@ -30,19 +30,31 @@ export function generatePassword(options: PasswordOptions = {}): string {
     includeSymbols: options.includeSymbols ?? preset.includeSymbols
   };
 
-  let chars = '';
-  if (settings.includeLowercase) chars += LOWER;
-  if (settings.includeUppercase) chars += UPPER;
-  if (settings.includeNumbers) chars += NUMBERS;
-  if (settings.includeSymbols) chars += SYMBOLS;
+  const sets: string[] = [];
+  if (settings.includeLowercase) sets.push(LOWER);
+  if (settings.includeUppercase) sets.push(UPPER);
+  if (settings.includeNumbers) sets.push(NUMBERS);
+  if (settings.includeSymbols) sets.push(SYMBOLS);
 
-  if (!chars) throw new Error('No character sets selected');
+  if (!sets.length) throw new Error('No character sets selected');
 
+  // Ensure at least one character from each selected set
+  const required = sets.map((s) => s[Math.floor(Math.random() * s.length)]);
+  const remainingLength = Math.max(length - required.length, 0);
+
+  const allChars = sets.join('');
   let password = '';
-  const array = new Uint32Array(length);
+  const array = new Uint32Array(remainingLength);
   crypto.getRandomValues(array);
-  for (let i = 0; i < length; i++) {
-    password += chars[array[i] % chars.length];
+  for (let i = 0; i < remainingLength; i++) {
+    password += allChars[array[i] % allChars.length];
   }
+
+  // Insert required characters at random positions
+  required.forEach((ch) => {
+    const pos = Math.floor(Math.random() * (password.length + 1));
+    password = password.slice(0, pos) + ch + password.slice(pos);
+  });
+
   return password;
 }
