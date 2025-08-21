@@ -6,7 +6,10 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Ensure popup page renders and has expected title
 test('popup page loads', async ({ page }) => {
-  const popupPath = path.resolve(__dirname, '../dist/popup/index.html');
+  const popupPath = path.resolve(
+    __dirname,
+    '../dist/src/popup/index.html'
+  );
   await page.goto(`file://${popupPath}`);
   await expect(page).toHaveTitle('Popup');
 });
