@@ -19,8 +19,8 @@
     "vite": "^7.0.0",
     "@playwright/test": "^1.46.0",
     "eslint": "^8.57.0",
-    "@typescript-eslint/parser": "^7.16.0",
-    "@typescript-eslint/eslint-plugin": "^7.16.0"
+    "@typescript-eslint/parser": "^8.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^5.0.1",
