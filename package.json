@@ -1,0 +1,14 @@
+{
+  "name": "browser-extension-starter",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "watch": "vite build --watch"
+  },
+  "devDependencies": {
+    "@crxjs/vite-plugin": "^2.0.0",
+    "vite": "^5.0.0"
+  }
+}

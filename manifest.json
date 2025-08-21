@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Sample Extension",
+  "version": "0.1.0",
+  "description": "Starter extension",
+  "background": {
+    "service_worker": "src/background/index.js"
+  },
+  "action": {
+    "default_popup": "src/popup/index.html"
+  },
+  "options_page": "src/options/index.html",
+  "permissions": ["storage", "scripting"]
+}
