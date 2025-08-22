@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PasswordGenerator from './PasswordGenerator';
 import {
   saveCredential,
@@ -31,13 +31,32 @@ export default function App() {
   const [search, setSearch] = useState('');
   const [form, setForm] = useState({ id: '', username: '', password: '', category: '' });
   const [showPwd, setShowPwd] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+
+  const startTimer = (duration: number) => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      setUnlocked(false);
+      setMaster('');
+      chrome.storage.local.remove('sessionExpiry');
+    }, duration);
+  };
 
   useEffect(() => {
-    chrome.storage.local.get(['vaultIndex', 'categories'], (res: any) => {
+    chrome.storage.local.get(['vaultIndex', 'categories', 'sessionExpiry'], (res: any) => {
       setEntries(res.vaultIndex || []);
       setCategories(res.categories || []);
+      if (res.sessionExpiry && res.sessionExpiry > Date.now()) {
+        setUnlocked(true);
+        startTimer(res.sessionExpiry - Date.now());
+      } else {
+        chrome.storage.local.remove('sessionExpiry');
+      }
     });
     isMasterPasswordSet().then(setHasMaster);
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
   }, []);
 
   useEffect(() => {
@@ -54,6 +73,9 @@ export default function App() {
     if (await verifyMasterPassword(master)) {
       setUnlocked(true);
       setError('');
+      const expiry = Date.now() + 15 * 60 * 1000;
+      chrome.storage.local.set({ sessionExpiry: expiry });
+      startTimer(15 * 60 * 1000);
     } else {
       setError('Invalid password');
     }
@@ -64,6 +86,9 @@ export default function App() {
     await setMasterPassword(master);
     setUnlocked(true);
     setHasMaster(true);
+    const expiry = Date.now() + 15 * 60 * 1000;
+    chrome.storage.local.set({ sessionExpiry: expiry });
+    startTimer(15 * 60 * 1000);
   };
 
   const changeMaster = async (e: React.FormEvent) => {
@@ -82,6 +107,8 @@ export default function App() {
   const resetAll = async () => {
     await resetVault();
     setUnlocked(false);
+    if (timerRef.current) clearTimeout(timerRef.current);
+    chrome.storage.local.remove('sessionExpiry');
     setHasMaster(false);
     setEntries([]);
     setCategories([]);
