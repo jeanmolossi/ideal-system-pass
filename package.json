@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev": "vite",
     "build": "vite build",
     "watch": "vite build --watch",
     "test": "jest",
@@ -20,7 +21,9 @@
     "@playwright/test": "^1.46.0",
     "eslint": "^8.57.0",
     "@typescript-eslint/parser": "^8.0.0",
-    "@typescript-eslint/eslint-plugin": "^8.0.0"
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@types/chrome": "^0.1.4",
+    "@types/node": "^24.3.0"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^5.0.1",

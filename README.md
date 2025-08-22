@@ -8,16 +8,16 @@ Install dependencies:
 npm install
 ```
 
-Build the extension:
+Start a development build that rebuilds on file changes:
+
+```sh
+npm run dev
+```
+
+Build the production extension:
 
 ```sh
 npm run build
-```
-
-Watch for changes during development:
-
-```sh
-npm run watch
 ```
 
 ## Password Generation
@@ -71,7 +71,7 @@ Current storage is local only. The exported format is suitable for adding option
 
 ## Installation
 
-1. Run `npm run build` to generate the `dist` folder.
+1. Run `npm run build` to generate the `dist` folder (includes `manifest.json` and assets from `public/`).
 2. Open `chrome://extensions` in your browser and enable *Developer mode*.
 3. Choose **Load unpacked** and select the generated `dist` directory.
 
