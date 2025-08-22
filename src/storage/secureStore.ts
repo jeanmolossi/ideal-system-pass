@@ -73,7 +73,13 @@ export async function changeMasterPassword(oldPassword: string, newPassword: str
   const all = await chrome.storage.local.get(null);
   for (const [id, value] of Object.entries(all)) {
     if (id === 'master' || id === 'vaultIndex' || id === 'categories') continue;
-    if (value && (value as any).ciphertext && (value as any).iv && (value as any).salt) {
+    if (
+      value &&
+      (value as any).ciphertext &&
+      (value as any).iv &&
+      (value as any).salt &&
+      (value as any).tag
+    ) {
       const plain = await getCredential(oldPassword, id);
       if (plain !== null) {
         await saveCredential(newPassword, id, plain);
@@ -113,10 +119,14 @@ export async function saveCredential(
   const enc = new TextEncoder();
   const data = enc.encode(credential);
   const cipher = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, data);
+  const cipherBytes = new Uint8Array(cipher);
+  const tag = cipherBytes.slice(cipherBytes.length - 16);
+  const ciphertext = cipherBytes.slice(0, cipherBytes.length - 16);
   const stored = {
-    ciphertext: bufferToBase64(cipher),
+    ciphertext: bufferToBase64(ciphertext),
     iv: bufferToBase64(iv),
-    salt: bufferToBase64(salt)
+    salt: bufferToBase64(salt),
+    tag: bufferToBase64(tag)
   };
   await chrome.storage.local.set({ [id]: stored });
 }
@@ -133,11 +143,15 @@ export async function getCredential(
     const salt = base64ToBuffer(stored.salt);
     const iv = base64ToBuffer(stored.iv);
     const ciphertext = base64ToBuffer(stored.ciphertext);
+    const tag = base64ToBuffer(stored.tag);
+    const combined = new Uint8Array(ciphertext.length + tag.length);
+    combined.set(ciphertext);
+    combined.set(tag, ciphertext.length);
     const key = await deriveKey(masterPassword, salt);
     const plainBuffer = await crypto.subtle.decrypt(
       { name: 'AES-GCM', iv } as any,
       key,
-      ciphertext as unknown as BufferSource
+      combined as unknown as BufferSource
     );
     const dec = new TextDecoder();
     return dec.decode(plainBuffer);
@@ -149,4 +163,12 @@ export async function getCredential(
 /** Delete a stored credential */
 export async function deleteCredential(id: string): Promise<void> {
   await chrome.storage.local.remove(id);
+}
+
+/** List stored credential identifiers */
+export async function listCredentials(): Promise<string[]> {
+  const all = await chrome.storage.local.get(null);
+  return Object.keys(all).filter(
+    (id) => id !== 'master' && id !== 'vaultIndex' && id !== 'categories'
+  );
 }
