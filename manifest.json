@@ -2,6 +2,7 @@
   "manifest_version": 3,
   "name": "Sample Extension",
   "version": "0.1.0",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmrzInBWVfNx6+RQeLHkoiu/fdvCZmnX+Gtj3aUzadKJprcoGIxD+yUI/Srr3alTHzBZGDiZpb0j8uL1E/xYfI5o/hTRGeobgmkCQkIw5AbvO6I+Z5MOpLbTgQF9yxs+8U9KKgNndVAmzo7Ix2U67Q6jNIsAqjSxzrvWdyWVLDLIHjpDad/5+W2SRpnz+QB/WdsQVvJQJnzAuQi3sYJ3z4RXHbiKJavw9ksSDMUKK+4VyFfSfNo/I8jBwO0MH5EndWRV2m3Dm/rWa9A5LeQ/qXnqhUN/HkEvrA4tLFhinrA54FiZrTizmzphxIsbWPKj3tFc2sMUhzNvpsi968KmKhwIDAQAB",
   "description": "Starter extension",
   "background": {
     "service_worker": "src/background/index.ts"

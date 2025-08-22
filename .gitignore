@@ -33,3 +33,6 @@ go.work.sum
 # Node
 node_modules/
 dist/
+
+# Extension signing key
+key.pem
