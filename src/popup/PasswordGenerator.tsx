@@ -23,37 +23,39 @@ export default function PasswordGenerator({ onGenerate }: Props) {
   };
 
   return (
-    <div className="flex items-center space-x-1">
-      <input
-        type="number"
-        min={4}
-        max={64}
-        value={length}
-        onChange={(e) => setLength(Number(e.target.value))}
-        className="w-12 p-1 border rounded text-sm"
-        aria-label="password length"
-      />
-      <select
-        value={complexity}
-        onChange={(e) => setComplexity(e.target.value as Complexity)}
-        className="p-1 border rounded text-sm"
-        aria-label="password complexity"
-      >
-        <option value="simple">Simple</option>
-        <option value="medium">Medium</option>
-        <option value="strong">Strong</option>
-      </select>
-      <button
-        type="button"
-        onClick={generate}
-        aria-label="generate password"
-        className="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded"
-      >
-        Generate
-      </button>
+    <div className="flex flex-col space-y-2">
+      <div className="flex items-center space-x-2">
+        <input
+          type="number"
+          min={4}
+          max={64}
+          value={length}
+          onChange={(e) => setLength(Number(e.target.value))}
+          className="w-16 p-1 border rounded text-sm"
+          aria-label="password length"
+        />
+        <select
+          value={complexity}
+          onChange={(e) => setComplexity(e.target.value as Complexity)}
+          className="flex-1 p-1 border rounded text-sm"
+          aria-label="password complexity"
+        >
+          <option value="simple">Simple</option>
+          <option value="medium">Medium</option>
+          <option value="strong">Strong</option>
+        </select>
+        <button
+          type="button"
+          onClick={generate}
+          aria-label="generate password"
+          className="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded"
+        >
+          Generate
+        </button>
+      </div>
       {generated && (
-        <>
-          <span className="text-xs font-mono">{generated}</span>
+        <div className="flex items-center space-x-2">
+          <span className="text-xs font-mono break-all">{generated}</span>
           <button
             type="button"
             onClick={copy}
@@ -62,7 +64,7 @@ export default function PasswordGenerator({ onGenerate }: Props) {
           >
             Copy
           </button>
-        </>
+        </div>
       )}
     </div>
   );
