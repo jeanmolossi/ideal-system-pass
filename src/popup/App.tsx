@@ -246,24 +246,28 @@ export default function App() {
               className="w-full p-1 border rounded"
               aria-label="username"
             />
-            <div className="flex items-center">
-              <input
-                placeholder="Password"
-                type={showPwd ? 'text' : 'password'}
-                value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
-                className="w-full p-1 border rounded flex-1"
-                aria-label="password"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPwd((s) => !s)}
-                aria-label={showPwd ? 'hide password' : 'show password'}
-                className="ml-1 text-sm underline"
-              >
-                {showPwd ? 'Ocultar' : 'Mostrar'}
-              </button>
-              <PasswordGenerator onGenerate={(pwd) => setForm({ ...form, password: pwd })} />
+            <div className="flex flex-col space-y-1">
+              <div className="flex items-center">
+                <input
+                  placeholder="Password"
+                  type={showPwd ? 'text' : 'password'}
+                  value={form.password}
+                  onChange={(e) => setForm({ ...form, password: e.target.value })}
+                  className="w-full p-1 border rounded flex-1"
+                  aria-label="password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPwd((s) => !s)}
+                  aria-label={showPwd ? 'hide password' : 'show password'}
+                  className="ml-1 text-sm underline"
+                >
+                  {showPwd ? 'Ocultar' : 'Mostrar'}
+                </button>
+              </div>
+              <div>
+                <PasswordGenerator onGenerate={(pwd) => setForm({ ...form, password: pwd })} />
+              </div>
             </div>
             <div>
               <input

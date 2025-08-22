@@ -23,7 +23,7 @@ export default function PasswordGenerator({ onGenerate }: Props) {
   };
 
   return (
-    <div className="ml-2 flex items-center space-x-1">
+    <div className="flex items-center space-x-1">
       <input
         type="number"
         min={4}
