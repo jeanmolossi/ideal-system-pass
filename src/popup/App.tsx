@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { saveCredential, getCredential, deleteCredential } from '../storage/secureStore';
+import {
+  saveCredential,
+  getCredential,
+  deleteCredential,
+  setMasterPassword,
+  verifyMasterPassword,
+  changeMasterPassword,
+  resetVault,
+  isMasterPasswordSet
+} from '../storage/secureStore';
 
 declare const chrome: any;
 
@@ -11,11 +20,23 @@ type VaultEntry = {
 
 export default function App() {
   const [master, setMaster] = useState('');
+  const [newMaster, setNewMaster] = useState('');
   const [unlocked, setUnlocked] = useState(false);
+  const [hasMaster, setHasMaster] = useState<boolean | null>(null);
+  const [error, setError] = useState('');
+  const [showChange, setShowChange] = useState(false);
   const [entries, setEntries] = useState<VaultEntry[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [search, setSearch] = useState('');
   const [form, setForm] = useState({ id: '', username: '', password: '', category: '' });
+
+  useEffect(() => {
+    chrome.storage.local.get(['vaultIndex', 'categories'], (res: any) => {
+      setEntries(res.vaultIndex || []);
+      setCategories(res.categories || []);
+    });
+    isMasterPasswordSet().then(setHasMaster);
+  }, []);
 
   useEffect(() => {
     if (unlocked) {
@@ -26,9 +47,44 @@ export default function App() {
     }
   }, [unlocked]);
 
-  const unlock = (e: React.FormEvent) => {
+  const unlock = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (await verifyMasterPassword(master)) {
+      setUnlocked(true);
+      setError('');
+    } else {
+      setError('Invalid password');
+    }
+  };
+
+  const createMaster = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await setMasterPassword(master);
     setUnlocked(true);
+    setHasMaster(true);
+  };
+
+  const changeMaster = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const ok = await changeMasterPassword(master, newMaster);
+    if (ok) {
+      setMaster(newMaster);
+      setNewMaster('');
+      setShowChange(false);
+      setError('');
+    } else {
+      setError('Wrong current password');
+    }
+  };
+
+  const resetAll = async () => {
+    await resetVault();
+    setUnlocked(false);
+    setHasMaster(false);
+    setEntries([]);
+    setCategories([]);
+    setMaster('');
+    setNewMaster('');
   };
 
   const addOrUpdate = async (e: React.FormEvent) => {
@@ -60,7 +116,21 @@ export default function App() {
 
   return (
     <div className="p-4 w-80 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
-      {!unlocked ? (
+      {hasMaster === false && !unlocked ? (
+        <form onSubmit={createMaster} className="space-y-2">
+          <label className="block">
+            <span className="text-sm">Create Master Password</span>
+            <input
+              type="password"
+              value={master}
+              onChange={(e) => setMaster(e.target.value)}
+              className="w-full p-1 border rounded"
+              aria-label="new master password"
+            />
+          </label>
+          <button type="submit" className="px-2 py-1 bg-green-600 text-white rounded">Set Password</button>
+        </form>
+      ) : !unlocked ? (
         <form onSubmit={unlock} className="space-y-2">
           <label className="block">
             <span className="text-sm">Master Password</span>
@@ -72,10 +142,43 @@ export default function App() {
               aria-label="master password"
             />
           </label>
+          {error && <div className="text-red-500 text-sm">{error}</div>}
           <button type="submit" className="px-2 py-1 bg-blue-500 text-white rounded">Unlock</button>
         </form>
       ) : (
         <div className="space-y-3">
+          <div className="flex justify-between">
+            <button onClick={() => setShowChange(!showChange)} className="text-sm underline">
+              {showChange ? 'Cancel' : 'Change Password'}
+            </button>
+            <button onClick={resetAll} className="text-sm text-red-600 underline">
+              Reset Vault
+            </button>
+          </div>
+          {showChange && (
+            <form onSubmit={changeMaster} className="space-y-1">
+              <input
+                type="password"
+                placeholder="Current"
+                value={master}
+                onChange={(e) => setMaster(e.target.value)}
+                className="w-full p-1 border rounded"
+                aria-label="current master password"
+              />
+              <input
+                type="password"
+                placeholder="New"
+                value={newMaster}
+                onChange={(e) => setNewMaster(e.target.value)}
+                className="w-full p-1 border rounded"
+                aria-label="new master password"
+              />
+              <button type="submit" className="px-2 py-1 bg-blue-500 text-white rounded">
+                Change
+              </button>
+              {error && <div className="text-red-500 text-sm">{error}</div>}
+            </form>
+          )}
           <div>
             <label className="block">
               <span className="text-sm">Search</span>
