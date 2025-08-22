@@ -1,4 +1,13 @@
-import { saveCredential, getCredential, deleteCredential } from './secureStore';
+import {
+  saveCredential,
+  getCredential,
+  deleteCredential,
+  setMasterPassword,
+  verifyMasterPassword,
+  changeMasterPassword,
+  resetVault,
+  isMasterPasswordSet
+} from './secureStore';
 import { webcrypto } from 'crypto';
 
 declare const chrome: any;
@@ -14,11 +23,17 @@ const store = new Map<string, any>();
       async set(obj: Record<string, unknown>) {
         Object.entries(obj).forEach(([k, v]) => store.set(k, v));
       },
-      async get(keys: string[]) {
+      async get(keys: string[] | null) {
         const result: Record<string, unknown> = {};
-        keys.forEach((k) => {
-          result[k] = store.get(k);
-        });
+        if (Array.isArray(keys)) {
+          keys.forEach((k) => {
+            result[k] = store.get(k);
+          });
+        } else {
+          store.forEach((v, k) => {
+            result[k] = v;
+          });
+        }
         return result;
       },
       async remove(key: string) {
@@ -64,5 +79,29 @@ describe('secureStore', () => {
     await deleteCredential(id);
     const result = await getCredential(master, id);
     expect(result).toBeNull();
+  });
+
+  it('creates and verifies master password', async () => {
+    await setMasterPassword('a');
+    expect(await verifyMasterPassword('a')).toBe(true);
+    expect(await verifyMasterPassword('b')).toBe(false);
+  });
+
+  it('changes master password and reencrypts data', async () => {
+    await setMasterPassword('old');
+    await saveCredential('old', 'id', 'cred');
+    const changed = await changeMasterPassword('old', 'new');
+    expect(changed).toBe(true);
+    expect(await verifyMasterPassword('new')).toBe(true);
+    expect(await getCredential('new', 'id')).toBe('cred');
+    expect(await getCredential('old', 'id')).toBeNull();
+  });
+
+  it('resets vault deleting all data', async () => {
+    await setMasterPassword('m');
+    await saveCredential('m', 'id', 'cred');
+    await resetVault();
+    expect(await isMasterPasswordSet()).toBe(false);
+    expect(await getCredential('m', 'id')).toBeNull();
   });
 });
