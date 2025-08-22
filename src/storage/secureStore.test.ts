@@ -16,6 +16,15 @@ declare const chrome: any;
 // Ensure Web Crypto API is available in Jest environment
 Object.defineProperty(globalThis, 'crypto', { value: webcrypto, configurable: true });
 
+Object.defineProperty(globalThis, 'btoa', {
+  value: (data: string) => Buffer.from(data, 'binary').toString('base64'),
+  configurable: true
+});
+Object.defineProperty(globalThis, 'atob', {
+  value: (data: string) => Buffer.from(data, 'base64').toString('binary'),
+  configurable: true
+});
+
 // Simple in-memory mock for chrome.storage.local
 const store = new Map<string, any>();
 (globalThis as any).chrome = {

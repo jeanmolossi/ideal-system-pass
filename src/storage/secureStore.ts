@@ -7,12 +7,11 @@ declare const chrome: any;
 
 function bufferToBase64(buffer: ArrayBuffer | Uint8Array): string {
   const bytes = buffer instanceof ArrayBuffer ? new Uint8Array(buffer) : buffer;
-  return Buffer.from(bytes).toString('base64');
+  return btoa(String.fromCharCode(...bytes));
 }
 
 function base64ToBuffer(base64: string): Uint8Array {
-  const buffer = Buffer.from(base64, 'base64');
-  return new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength);
+  return Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));
 }
 
 async function getKeyMaterial(password: string): Promise<CryptoKey> {
