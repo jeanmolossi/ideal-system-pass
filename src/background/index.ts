@@ -1,12 +1,12 @@
+/// <reference types="chrome" />
 // Background service worker mediating credential storage and retrieval
 // and relaying messages between extension components.
-/* global chrome */
 
 // Keep track of open ports (e.g., from the popup)
-const ports = new Set();
+const ports = new Set<chrome.runtime.Port>();
 
 // Handle long‑lived connections
-chrome.runtime.onConnect.addListener((port) => {
+chrome.runtime.onConnect.addListener((port: chrome.runtime.Port) => {
   ports.add(port);
   port.onDisconnect.addListener(() => ports.delete(port));
 
