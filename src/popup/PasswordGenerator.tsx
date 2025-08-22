@@ -8,10 +8,18 @@ interface Props {
 export default function PasswordGenerator({ onGenerate }: Props) {
   const [length, setLength] = useState(12);
   const [complexity, setComplexity] = useState<Complexity>('medium');
+  const [generated, setGenerated] = useState('');
 
   const generate = () => {
     const pwd = generatePassword({ length, complexity });
+    setGenerated(pwd);
     onGenerate(pwd);
+  };
+
+  const copy = async () => {
+    if (generated) {
+      await navigator.clipboard.writeText(generated);
+    }
   };
 
   return (
@@ -43,6 +51,19 @@ export default function PasswordGenerator({ onGenerate }: Props) {
       >
         Generate
       </button>
+      {generated && (
+        <>
+          <span className="text-xs font-mono">{generated}</span>
+          <button
+            type="button"
+            onClick={copy}
+            aria-label="copy password"
+            className="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded"
+          >
+            Copy
+          </button>
+        </>
+      )}
     </div>
   );
 }
