@@ -5,7 +5,7 @@ import manifest from './manifest.json' assert { type: 'json' };
 import { resolve } from 'path';
 
 export default defineConfig({
-  plugins: [react(), crx({ manifest })],
+  plugins: [react(), crx({ manifest, keyFile: resolve(__dirname, 'key.pem') })],
   build: {
     outDir: 'dist',
     rollupOptions: {

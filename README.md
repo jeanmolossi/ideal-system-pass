@@ -20,6 +20,21 @@ Build the production extension:
 npm run build
 ```
 
+### Extension signing key
+
+To keep a stable extension ID across builds, generate an RSA key pair and
+include the base64‑encoded public key in `manifest.json` under the `"key"`
+field. The private key (`key.pem`) is required during the build process but
+**must not** be committed to version control.
+
+```
+openssl genrsa -out key.pem 2048
+openssl rsa -in key.pem -pubout -outform DER | openssl base64 -A
+```
+
+The repository's `.gitignore` prevents `key.pem` from being added. Store the
+private key securely and reference it locally when running `npm run build`.
+
 ## Password Generation
 
 Use the `generatePassword` utility to create random passwords. Three presets are available via the `complexity` option:
