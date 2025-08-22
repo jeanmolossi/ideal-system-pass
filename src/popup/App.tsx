@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import PasswordGenerator from './PasswordGenerator';
-import ThemeToggle from './ThemeToggle';
 import {
   saveCredential,
   getCredential,
@@ -117,10 +116,7 @@ export default function App() {
   const filtered = entries.filter((e) => e.id.toLowerCase().includes(search.toLowerCase()) || e.category.toLowerCase().includes(search.toLowerCase()));
 
   return (
-    <div className="p-4 w-80 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
-      <div className="flex justify-end mb-2">
-        <ThemeToggle />
-      </div>
+    <div className="p-4 w-80 bg-gray-50 text-gray-900">
       {hasMaster === false && !unlocked ? (
         <form onSubmit={createMaster} className="space-y-2">
           <label className="block">
