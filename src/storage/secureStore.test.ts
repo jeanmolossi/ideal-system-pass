@@ -2,6 +2,7 @@ import {
   saveCredential,
   getCredential,
   deleteCredential,
+  listCredentials,
   setMasterPassword,
   verifyMasterPassword,
   changeMasterPassword,
@@ -58,6 +59,7 @@ describe('secureStore', () => {
     await saveCredential(master, id, credential);
     const stored = store.get(id);
     expect(stored.ciphertext).not.toContain(credential);
+    expect(stored.tag).toBeDefined();
     const result = await getCredential(master, id);
     expect(result).toBe(credential);
   });
@@ -79,6 +81,14 @@ describe('secureStore', () => {
     await deleteCredential(id);
     const result = await getCredential(master, id);
     expect(result).toBeNull();
+  });
+
+  it('lists stored credential ids', async () => {
+    const master = 'master123';
+    await saveCredential(master, 'id1', 'cred1');
+    await saveCredential(master, 'id2', 'cred2');
+    const list = await listCredentials();
+    expect(list).toEqual(expect.arrayContaining(['id1', 'id2']));
   });
 
   it('creates and verifies master password', async () => {
