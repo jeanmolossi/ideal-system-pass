@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ThemeToggle from './ThemeToggle';
 
 declare const chrome: any;
 
@@ -23,6 +24,9 @@ export default function Options() {
 
   return (
     <div className="p-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+      <div className="flex justify-end mb-2">
+        <ThemeToggle />
+      </div>
       <h1 className="text-xl mb-2">Categories</h1>
       <ul className="mb-2 list-disc list-inside">
         {categories.map((c) => (

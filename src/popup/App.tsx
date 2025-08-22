@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import PasswordGenerator from './PasswordGenerator';
+import ThemeToggle from './ThemeToggle';
 import {
   saveCredential,
   getCredential,
@@ -116,6 +118,9 @@ export default function App() {
 
   return (
     <div className="p-4 w-80 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+      <div className="flex justify-end mb-2">
+        <ThemeToggle />
+      </div>
       {hasMaster === false && !unlocked ? (
         <form onSubmit={createMaster} className="space-y-2">
           <label className="block">
@@ -217,14 +222,17 @@ export default function App() {
               className="w-full p-1 border rounded"
               aria-label="username"
             />
-            <input
-              placeholder="Password"
-              type="password"
-              value={form.password}
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
-              className="w-full p-1 border rounded"
-              aria-label="password"
-            />
+            <div className="flex items-center">
+              <input
+                placeholder="Password"
+                type="password"
+                value={form.password}
+                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                className="w-full p-1 border rounded flex-1"
+                aria-label="password"
+              />
+              <PasswordGenerator onGenerate={(pwd) => setForm({ ...form, password: pwd })} />
+            </div>
             <div>
               <input
                 placeholder="Category"
