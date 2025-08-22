@@ -30,6 +30,7 @@ export default function App() {
   const [categories, setCategories] = useState<string[]>([]);
   const [search, setSearch] = useState('');
   const [form, setForm] = useState({ id: '', username: '', password: '', category: '' });
+  const [showPwd, setShowPwd] = useState(false);
 
   useEffect(() => {
     chrome.storage.local.get(['vaultIndex', 'categories'], (res: any) => {
@@ -221,12 +222,20 @@ export default function App() {
             <div className="flex items-center">
               <input
                 placeholder="Password"
-                type="password"
+                type={showPwd ? 'text' : 'password'}
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
                 className="w-full p-1 border rounded flex-1"
                 aria-label="password"
               />
+              <button
+                type="button"
+                onClick={() => setShowPwd((s) => !s)}
+                aria-label={showPwd ? 'hide password' : 'show password'}
+                className="ml-1 text-sm underline"
+              >
+                {showPwd ? 'Ocultar' : 'Mostrar'}
+              </button>
               <PasswordGenerator onGenerate={(pwd) => setForm({ ...form, password: pwd })} />
             </div>
             <div>
