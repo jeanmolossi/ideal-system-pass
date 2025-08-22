@@ -144,7 +144,7 @@ export default function App() {
   const filtered = entries.filter((e) => e.id.toLowerCase().includes(search.toLowerCase()) || e.category.toLowerCase().includes(search.toLowerCase()));
 
   return (
-    <div className="p-4 w-80 bg-gray-50 text-gray-900">
+    <div className="p-4 w-[400px] max-w-full bg-gray-50 text-gray-900">
       {hasMaster === false && !unlocked ? (
         <form onSubmit={createMaster} className="space-y-2">
           <label className="block">
