@@ -19,6 +19,7 @@ type VaultEntry = {
   id: string;
   username: string;
   category: string;
+  url: string;
 };
 
 export default function App() {
@@ -31,7 +32,7 @@ export default function App() {
   const [entries, setEntries] = useState<VaultEntry[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [search, setSearch] = useState('');
-  const [form, setForm] = useState({ id: '', username: '', password: '', category: '' });
+  const [form, setForm] = useState({ id: '', username: '', password: '', category: '', url: '' });
   const [showPwd, setShowPwd] = useState(false);
   const [activeTab, setActiveTab] = useState<'list' | 'add'>('list');
   const [copied, setCopied] = useState<string | null>(null);
@@ -48,7 +49,7 @@ export default function App() {
 
   useEffect(() => {
     chrome.storage.local.get(['vaultIndex', 'categories', 'sessionExpiry'], (res: any) => {
-      setEntries(res.vaultIndex || []);
+      setEntries((res.vaultIndex || []).map((en: any) => ({ ...en, url: en.url || '' })));
       setCategories(res.categories || []);
       if (res.sessionExpiry && res.sessionExpiry > Date.now()) {
         setUnlocked(true);
@@ -66,7 +67,7 @@ export default function App() {
   useEffect(() => {
     if (unlocked) {
       chrome.storage.local.get(['vaultIndex', 'categories'], (res: any) => {
-        setEntries(res.vaultIndex || []);
+        setEntries((res.vaultIndex || []).map((en: any) => ({ ...en, url: en.url || '' })));
         setCategories(res.categories || []);
       });
     }
@@ -76,8 +77,9 @@ export default function App() {
     if (unlocked) {
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs: any[]) => {
         const title = tabs[0]?.title || '';
+        const url = tabs[0]?.url || '';
         const info = inferServiceInfo(title, categories);
-        setForm((prev) => ({ ...prev, id: info.id, category: info.category }));
+        setForm((prev) => ({ ...prev, id: info.id, category: info.category, url }));
       });
     }
   }, [unlocked, categories]);
@@ -132,12 +134,14 @@ export default function App() {
 
   const addOrUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    const payload = JSON.stringify({ username: form.username, password: form.password, category: form.category });
+    const payload = JSON.stringify({ username: form.username, password: form.password, category: form.category, url: form.url });
     await saveCredential(master, form.id, payload);
-    const updated = entries.filter((en) => en.id !== form.id).concat({ id: form.id, username: form.username, category: form.category });
+    const updated = entries
+      .filter((en) => en.id !== form.id)
+      .concat({ id: form.id, username: form.username, category: form.category, url: form.url });
     setEntries(updated);
     chrome.storage.local.set({ vaultIndex: updated });
-    setForm({ id: '', username: '', password: '', category: '' });
+    setForm({ id: '', username: '', password: '', category: '', url: '' });
   };
 
   const remove = async (id: string) => {
@@ -151,7 +155,7 @@ export default function App() {
     const stored = await getCredential(master, id);
     if (stored) {
       const obj = JSON.parse(stored);
-      setForm({ id, username: obj.username, password: obj.password, category: obj.category });
+      setForm({ id, username: obj.username, password: obj.password, category: obj.category, url: obj.url || '' });
     }
   };
 
@@ -293,10 +297,19 @@ export default function App() {
                     className="flex justify-between items-center mb-1 rounded transition-all hover:bg-gray-100 focus:ring animate-[fade-in_.2s_ease-in]"
                   >
                     <button
-                      onClick={() => fillForm(e.id)}
+                      onClick={() => chrome.tabs.create({ url: e.url })}
                       className="text-left underline flex-1 transition-colors hover:brightness-110 focus:ring active:scale-95"
                     >
                       {formatCredential(e.id, e.category)}
+                    </button>
+                    <button
+                      onClick={() => {
+                        fillForm(e.id);
+                        setActiveTab('add');
+                      }}
+                      className="ml-2 px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 transition"
+                    >
+                      Editar
                     </button>
                     <button
                       onClick={() => copyUsername(e.username, e.id)}
