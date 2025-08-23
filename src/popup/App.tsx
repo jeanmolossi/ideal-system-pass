@@ -303,15 +303,6 @@ export default function App() {
                       {formatCredential(e.id, e.category)}
                     </button>
                     <button
-                      onClick={() => {
-                        fillForm(e.id);
-                        setActiveTab('add');
-                      }}
-                      className="ml-2 px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 transition"
-                    >
-                      Editar
-                    </button>
-                    <button
                       onClick={() => copyUsername(e.username, e.id)}
                       className="ml-2 px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 transition"
                     >
@@ -322,6 +313,16 @@ export default function App() {
                       className="ml-2 px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 transition"
                     >
                       {copied === `pass-${e.id}` ? 'Copiado!' : 'Copiar senha'}
+                    </button>
+                    <button
+                      onClick={() => {
+                        fillForm(e.id);
+                        setActiveTab('add');
+                      }}
+                      aria-label={`edit ${e.id}`}
+                      className="ml-2 text-blue-500 transition-colors hover:brightness-110 focus:ring active:scale-95"
+                    >
+                      ✎
                     </button>
                     <button
                       onClick={() => remove(e.id)}
