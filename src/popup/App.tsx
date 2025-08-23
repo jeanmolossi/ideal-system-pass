@@ -10,6 +10,7 @@ import {
   resetVault,
   isMasterPasswordSet
 } from '../storage/secureStore';
+import { inferServiceInfo } from '../utils/inferServiceInfo';
 
 declare const chrome: any;
 
@@ -67,6 +68,16 @@ export default function App() {
       });
     }
   }, [unlocked]);
+
+  useEffect(() => {
+    if (unlocked) {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs: any[]) => {
+        const title = tabs[0]?.title || '';
+        const info = inferServiceInfo(title, categories);
+        setForm((prev) => ({ ...prev, id: info.id, category: info.category }));
+      });
+    }
+  }, [unlocked, categories]);
 
   const unlock = async (e: React.FormEvent) => {
     e.preventDefault();
