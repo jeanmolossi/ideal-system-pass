@@ -148,16 +148,16 @@ export default function App() {
       <div className="rounded-lg bg-white shadow-sm p-4 transition-shadow hover:shadow">
       {hasMaster === false && !unlocked ? (
         <form onSubmit={createMaster} className="space-y-2">
-          <label className="block">
-            <span className="text-sm">Create Master Password</span>
-            <input
-              type="password"
-              value={master}
-              onChange={(e) => setMaster(e.target.value)}
-              className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50"
-              aria-label="new master password"
-            />
-          </label>
+            <label className="block">
+              <span className="text-sm">Create Master Password</span>
+              <input
+                type="password"
+                value={master}
+                onChange={(e) => setMaster(e.target.value)}
+                className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50 transition-all hover:bg-gray-100 focus:ring animate-[fade-in_.2s_ease-in]"
+                aria-label="new master password"
+              />
+            </label>
           <button
             type="submit"
             className="px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded shadow-sm hover:shadow transition-colors hover:brightness-110 focus:ring active:scale-95"
@@ -167,16 +167,16 @@ export default function App() {
         </form>
       ) : !unlocked ? (
         <form onSubmit={unlock} className="space-y-2">
-          <label className="block">
-            <span className="text-sm">Master Password</span>
-            <input
-              type="password"
-              value={master}
-              onChange={(e) => setMaster(e.target.value)}
-              className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50"
-              aria-label="master password"
-            />
-          </label>
+            <label className="block">
+              <span className="text-sm">Master Password</span>
+              <input
+                type="password"
+                value={master}
+                onChange={(e) => setMaster(e.target.value)}
+                className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50 transition-all hover:bg-gray-100 focus:ring animate-[fade-in_.2s_ease-in]"
+                aria-label="master password"
+              />
+            </label>
           {error && <div className="text-red-500 text-sm">{error}</div>}
           <button
             type="submit"
@@ -208,7 +208,7 @@ export default function App() {
                 placeholder="Current"
                 value={master}
                 onChange={(e) => setMaster(e.target.value)}
-                className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50"
+                className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50 transition-all hover:bg-gray-100 focus:ring animate-[fade-in_.2s_ease-in]"
                 aria-label="current master password"
               />
               <input
@@ -216,7 +216,7 @@ export default function App() {
                 placeholder="New"
                 value={newMaster}
                 onChange={(e) => setNewMaster(e.target.value)}
-                className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50"
+                className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50 transition-all hover:bg-gray-100 focus:ring animate-[fade-in_.2s_ease-in]"
                 aria-label="new master password"
               />
             <button
@@ -234,14 +234,18 @@ export default function App() {
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50"
+                className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50 transition-all hover:bg-gray-100 focus:ring animate-[fade-in_.2s_ease-in]"
                 aria-label="search credentials"
               />
             </label>
           </div>
           <ul>
-            {filtered.map((e) => (
-              <li key={e.id} className="flex justify-between items-center mb-1">
+              {filtered.map((e) => (
+                <li
+                  key={e.id}
+                  tabIndex={0}
+                  className="flex justify-between items-center mb-1 rounded transition-all hover:bg-gray-100 focus:ring animate-[fade-in_.2s_ease-in]"
+                >
                 <button
                   onClick={() => fillForm(e.id)}
                   className="text-left underline flex-1 transition-colors hover:brightness-110 focus:ring active:scale-95"
@@ -258,31 +262,31 @@ export default function App() {
               </li>
             ))}
           </ul>
-          <form onSubmit={addOrUpdate} className="space-y-1">
-            <input
-              placeholder="Service"
-              value={form.id}
-              onChange={(e) => setForm({ ...form, id: e.target.value })}
-              className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50"
-              aria-label="service"
-            />
-            <input
-              placeholder="Username"
-              value={form.username}
-              onChange={(e) => setForm({ ...form, username: e.target.value })}
-              className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50"
-              aria-label="username"
-            />
+            <form onSubmit={addOrUpdate} className="space-y-1">
+              <input
+                placeholder="Service"
+                value={form.id}
+                onChange={(e) => setForm({ ...form, id: e.target.value })}
+                className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50 transition-all hover:bg-gray-100 focus:ring animate-[fade-in_.2s_ease-in]"
+                aria-label="service"
+              />
+              <input
+                placeholder="Username"
+                value={form.username}
+                onChange={(e) => setForm({ ...form, username: e.target.value })}
+                className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50 transition-all hover:bg-gray-100 focus:ring animate-[fade-in_.2s_ease-in]"
+                aria-label="username"
+              />
             <div className="flex flex-col space-y-1">
-              <div className="flex items-center">
-                <input
-                  placeholder="Password"
-                  type={showPwd ? 'text' : 'password'}
-                  value={form.password}
-                  onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50 flex-1"
-                  aria-label="password"
-                />
+                <div className="flex items-center">
+                  <input
+                    placeholder="Password"
+                    type={showPwd ? 'text' : 'password'}
+                    value={form.password}
+                    onChange={(e) => setForm({ ...form, password: e.target.value })}
+                    className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50 flex-1 transition-all hover:bg-gray-100 focus:ring animate-[fade-in_.2s_ease-in]"
+                    aria-label="password"
+                  />
                 <button
                   type="button"
                   onClick={() => setShowPwd((s) => !s)}
@@ -296,21 +300,21 @@ export default function App() {
                 <PasswordGenerator onGenerate={(pwd) => setForm({ ...form, password: pwd })} />
               </div>
             </div>
-            <div>
-              <input
-                placeholder="Category"
-                value={form.category}
-                onChange={(e) => setForm({ ...form, category: e.target.value })}
-                className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50"
-                aria-label="category"
-                list="category-list"
-              />
-              <datalist id="category-list">
-                {categories.map((c) => (
-                  <option key={c} value={c} />
-                ))}
-              </datalist>
-            </div>
+              <div>
+                <input
+                  placeholder="Category"
+                  value={form.category}
+                  onChange={(e) => setForm({ ...form, category: e.target.value })}
+                  className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50 transition-all hover:bg-gray-100 focus:ring animate-[fade-in_.2s_ease-in]"
+                  aria-label="category"
+                  list="category-list"
+                />
+                <datalist id="category-list">
+                  {categories.map((c) => (
+                    <option key={c} value={c} />
+                  ))}
+                </datalist>
+              </div>
             <button
               type="submit"
               className="px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded shadow-sm hover:shadow transition-colors hover:brightness-110 focus:ring active:scale-95"
