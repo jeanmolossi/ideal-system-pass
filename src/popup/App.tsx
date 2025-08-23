@@ -11,6 +11,7 @@ import {
   isMasterPasswordSet
 } from '../storage/secureStore';
 import { inferServiceInfo } from '../utils/inferServiceInfo';
+import { formatCredential } from '../utils/formatCredential';
 
 declare const chrome: any;
 
@@ -295,7 +296,7 @@ export default function App() {
                       onClick={() => fillForm(e.id)}
                       className="text-left underline flex-1 transition-colors hover:brightness-110 focus:ring active:scale-95"
                     >
-                      {e.id} ({e.category})
+                      {formatCredential(e.id, e.category)}
                     </button>
                     <button
                       onClick={() => copyUsername(e.username, e.id)}
