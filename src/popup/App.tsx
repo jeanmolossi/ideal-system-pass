@@ -289,51 +289,57 @@ export default function App() {
                   />
                 </label>
               </div>
-              <ul>
-                {filtered.map((e) => (
-                  <li
-                    key={e.id}
-                    tabIndex={0}
-                    className="flex justify-between items-center mb-1 rounded transition-all hover:bg-gray-100 focus:ring animate-[fade-in_.2s_ease-in]"
-                  >
-                    <button
-                      onClick={() => chrome.tabs.create({ url: e.url })}
-                      className="text-left underline flex-1 transition-colors hover:brightness-110 focus:ring active:scale-95"
+                <ul>
+                  {filtered.map((e) => (
+                    <li
+                      key={e.id}
+                      tabIndex={0}
+                      className="mb-1 p-2 rounded transition-all hover:bg-gray-100 focus:ring animate-[fade-in_.2s_ease-in]"
                     >
-                      {formatCredential(e.id, e.category)}
-                    </button>
-                    <button
-                      onClick={() => copyUsername(e.username, e.id)}
-                      className="ml-2 px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 transition"
-                    >
-                      {copied === `user-${e.id}` ? 'Copiado!' : 'Copiar usuário'}
-                    </button>
-                    <button
-                      onClick={() => copyPassword(e.id)}
-                      className="ml-2 px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 transition"
-                    >
-                      {copied === `pass-${e.id}` ? 'Copiado!' : 'Copiar senha'}
-                    </button>
-                    <button
-                      onClick={() => {
-                        fillForm(e.id);
-                        setActiveTab('add');
-                      }}
-                      aria-label={`edit ${e.id}`}
-                      className="ml-2 text-blue-500 transition-colors hover:brightness-110 focus:ring active:scale-95"
-                    >
-                      ✎
-                    </button>
-                    <button
-                      onClick={() => remove(e.id)}
-                      aria-label={`delete ${e.id}`}
-                      className="ml-2 text-red-500 transition-colors hover:brightness-110 focus:ring active:scale-95"
-                    >
-                      ✕
-                    </button>
-                  </li>
-                ))}
-              </ul>
+                      <div className="flex justify-between items-center">
+                        <button
+                          onClick={() => chrome.tabs.create({ url: e.url })}
+                          className="text-left underline flex-1 transition-colors hover:brightness-110 focus:ring active:scale-95"
+                        >
+                          {formatCredential(e.id, e.category)}
+                        </button>
+                        <div className="flex space-x-2 ml-2">
+                          <button
+                            onClick={() => {
+                              fillForm(e.id);
+                              setActiveTab('add');
+                            }}
+                            aria-label={`edit ${e.id}`}
+                            className="text-blue-500 transition-colors hover:brightness-110 focus:ring active:scale-95"
+                          >
+                            ✎
+                          </button>
+                          <button
+                            onClick={() => remove(e.id)}
+                            aria-label={`delete ${e.id}`}
+                            className="text-red-500 transition-colors hover:brightness-110 focus:ring active:scale-95"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      </div>
+                      <div className="flex space-x-2 mt-1">
+                        <button
+                          onClick={() => copyUsername(e.username, e.id)}
+                          className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 transition"
+                        >
+                          {copied === `user-${e.id}` ? 'Copiado!' : 'Copiar usuário'}
+                        </button>
+                        <button
+                          onClick={() => copyPassword(e.id)}
+                          className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 transition"
+                        >
+                          {copied === `pass-${e.id}` ? 'Copiado!' : 'Copiar senha'}
+                        </button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
             </>
           )}
           {activeTab === 'add' && (
