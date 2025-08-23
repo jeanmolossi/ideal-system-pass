@@ -1,43 +1,39 @@
 import js from "@eslint/js";
-import tsPlugin from "@typescript-eslint/eslint-plugin";
-import tsParser from "@typescript-eslint/parser";
+import tseslint from "typescript-eslint";
 import globals from "globals";
 
 export default [
   {
-    ignores: ["dist"]
+    ignores: ["dist"],
   },
   js.configs.recommended,
+  ...tseslint.configs.recommended,
   {
     files: ["**/*.{ts,tsx,js}"],
     languageOptions: {
-      parser: tsParser,
+      parser: tseslint.parser,
       ecmaVersion: "latest",
       sourceType: "module",
       globals: {
         ...globals.browser,
         ...globals.node,
         BufferSource: "readonly",
-        chrome: "readonly"
-      }
-    },
-    plugins: {
-      "@typescript-eslint": tsPlugin
+        chrome: "readonly",
+      },
     },
     rules: {
-      ...tsPlugin.configs.recommended.rules,
-      "@typescript-eslint/no-explicit-any": "off"
+      "@typescript-eslint/no-explicit-any": "off",
     },
     linterOptions: {
-      reportUnusedDisableDirectives: "off"
-    }
+      reportUnusedDisableDirectives: "off",
+    },
   },
   {
     files: ["**/*.test.{ts,tsx,js}"],
     languageOptions: {
       globals: {
-        ...globals.jest
-      }
-    }
-  }
+        ...globals.jest,
+      },
+    },
+  },
 ];
