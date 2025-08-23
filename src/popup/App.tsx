@@ -33,6 +33,7 @@ export default function App() {
   const [form, setForm] = useState({ id: '', username: '', password: '', category: '' });
   const [showPwd, setShowPwd] = useState(false);
   const [activeTab, setActiveTab] = useState<'list' | 'add'>('list');
+  const [copied, setCopied] = useState<string | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
 
   const startTimer = (duration: number) => {
@@ -150,6 +151,22 @@ export default function App() {
     if (stored) {
       const obj = JSON.parse(stored);
       setForm({ id, username: obj.username, password: obj.password, category: obj.category });
+    }
+  };
+
+  const copyUsername = async (username: string, id: string) => {
+    await navigator.clipboard.writeText(username);
+    setCopied(`user-${id}`);
+    setTimeout(() => setCopied(null), 2000);
+  };
+
+  const copyPassword = async (id: string) => {
+    const stored = await getCredential(master, id);
+    if (stored) {
+      const obj = JSON.parse(stored);
+      await navigator.clipboard.writeText(obj.password);
+      setCopied(`pass-${id}`);
+      setTimeout(() => setCopied(null), 2000);
     }
   };
 
@@ -279,6 +296,18 @@ export default function App() {
                       className="text-left underline flex-1 transition-colors hover:brightness-110 focus:ring active:scale-95"
                     >
                       {e.id} ({e.category})
+                    </button>
+                    <button
+                      onClick={() => copyUsername(e.username, e.id)}
+                      className="ml-2 px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 transition"
+                    >
+                      {copied === `user-${e.id}` ? 'Copiado!' : 'Copiar usuário'}
+                    </button>
+                    <button
+                      onClick={() => copyPassword(e.id)}
+                      className="ml-2 px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 transition"
+                    >
+                      {copied === `pass-${e.id}` ? 'Copiado!' : 'Copiar senha'}
                     </button>
                     <button
                       onClick={() => remove(e.id)}
