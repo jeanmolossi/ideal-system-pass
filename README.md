@@ -2,6 +2,8 @@
 
 ## Development
 
+This project requires Node.js 22 or newer.
+
 Install dependencies:
 
 ```sh
