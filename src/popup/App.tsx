@@ -144,7 +144,8 @@ export default function App() {
   const filtered = entries.filter((e) => e.id.toLowerCase().includes(search.toLowerCase()) || e.category.toLowerCase().includes(search.toLowerCase()));
 
   return (
-    <div className="p-4 w-[400px] max-w-full bg-gray-100 text-gray-900 rounded-lg shadow-sm transition-shadow hover:shadow">
+    <div className="p-4 w-[360px] max-w-full bg-gray-100 text-gray-900">
+      <div className="rounded-lg bg-white shadow-sm p-4 transition-shadow hover:shadow">
       {hasMaster === false && !unlocked ? (
         <form onSubmit={createMaster} className="space-y-2">
           <label className="block">
@@ -153,13 +154,13 @@ export default function App() {
               type="password"
               value={master}
               onChange={(e) => setMaster(e.target.value)}
-              className="w-full p-1 border rounded bg-gray-100"
+              className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50"
               aria-label="new master password"
             />
           </label>
           <button
             type="submit"
-            className="px-2 py-1 bg-green-500 hover:bg-green-600 text-white rounded shadow-sm hover:shadow transition-colors hover:brightness-110 focus:ring active:scale-95"
+            className="px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded shadow-sm hover:shadow transition-colors hover:brightness-110 focus:ring active:scale-95"
           >
             Set Password
           </button>
@@ -172,14 +173,14 @@ export default function App() {
               type="password"
               value={master}
               onChange={(e) => setMaster(e.target.value)}
-              className="w-full p-1 border rounded bg-gray-100"
+              className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50"
               aria-label="master password"
             />
           </label>
           {error && <div className="text-red-500 text-sm">{error}</div>}
           <button
             type="submit"
-            className="px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded shadow-sm hover:shadow transition-colors hover:brightness-110 focus:ring active:scale-95"
+            className="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white rounded shadow-sm hover:shadow transition-colors hover:brightness-110 focus:ring active:scale-95"
           >
             Unlock
           </button>
@@ -207,7 +208,7 @@ export default function App() {
                 placeholder="Current"
                 value={master}
                 onChange={(e) => setMaster(e.target.value)}
-                className="w-full p-1 border rounded bg-gray-100"
+                className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50"
                 aria-label="current master password"
               />
               <input
@@ -215,12 +216,12 @@ export default function App() {
                 placeholder="New"
                 value={newMaster}
                 onChange={(e) => setNewMaster(e.target.value)}
-                className="w-full p-1 border rounded bg-gray-100"
+                className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50"
                 aria-label="new master password"
               />
             <button
               type="submit"
-              className="px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded shadow-sm hover:shadow transition-colors hover:brightness-110 focus:ring active:scale-95"
+              className="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white rounded shadow-sm hover:shadow transition-colors hover:brightness-110 focus:ring active:scale-95"
             >
               Change
             </button>
@@ -233,7 +234,7 @@ export default function App() {
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full p-1 border rounded bg-gray-100"
+                className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50"
                 aria-label="search credentials"
               />
             </label>
@@ -262,14 +263,14 @@ export default function App() {
               placeholder="Service"
               value={form.id}
               onChange={(e) => setForm({ ...form, id: e.target.value })}
-              className="w-full p-1 border rounded bg-gray-100"
+              className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50"
               aria-label="service"
             />
             <input
               placeholder="Username"
               value={form.username}
               onChange={(e) => setForm({ ...form, username: e.target.value })}
-              className="w-full p-1 border rounded bg-gray-100"
+              className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50"
               aria-label="username"
             />
             <div className="flex flex-col space-y-1">
@@ -279,7 +280,7 @@ export default function App() {
                   type={showPwd ? 'text' : 'password'}
                   value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  className="w-full p-1 border rounded bg-gray-100 flex-1"
+                  className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50 flex-1"
                   aria-label="password"
                 />
                 <button
@@ -300,7 +301,7 @@ export default function App() {
                 placeholder="Category"
                 value={form.category}
                 onChange={(e) => setForm({ ...form, category: e.target.value })}
-                className="w-full p-1 border rounded bg-gray-100"
+                className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50"
                 aria-label="category"
                 list="category-list"
               />
@@ -312,13 +313,14 @@ export default function App() {
             </div>
             <button
               type="submit"
-              className="px-2 py-1 bg-green-500 hover:bg-green-600 text-white rounded shadow-sm hover:shadow transition-colors hover:brightness-110 focus:ring active:scale-95"
+              className="px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded shadow-sm hover:shadow transition-colors hover:brightness-110 focus:ring active:scale-95"
             >
               Save
             </button>
           </form>
         </div>
       )}
+      </div>
     </div>
   );
 }
