@@ -32,6 +32,7 @@ export default function App() {
   const [search, setSearch] = useState('');
   const [form, setForm] = useState({ id: '', username: '', password: '', category: '' });
   const [showPwd, setShowPwd] = useState(false);
+  const [activeTab, setActiveTab] = useState<'list' | 'add'>('list');
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
 
   const startTimer = (duration: number) => {
@@ -239,40 +240,59 @@ export default function App() {
               {error && <div className="text-red-500 text-sm">{error}</div>}
             </form>
           )}
-          <div>
-            <label className="block">
-              <span className="text-sm">Search</span>
-              <input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50 transition-all hover:bg-gray-100 focus:ring animate-[fade-in_.2s_ease-in]"
-                aria-label="search credentials"
-              />
-            </label>
+          <div className="flex border-b">
+            <button
+              onClick={() => setActiveTab('list')}
+              className={`px-3 py-1.5 transition-colors ${activeTab === 'list' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} hover:bg-blue-600`}
+            >
+              Credenciais
+            </button>
+            <button
+              onClick={() => setActiveTab('add')}
+              className={`px-3 py-1.5 transition-colors ${activeTab === 'add' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} hover:bg-blue-600`}
+            >
+              Nova
+            </button>
           </div>
-          <ul>
-              {filtered.map((e) => (
-                <li
-                  key={e.id}
-                  tabIndex={0}
-                  className="flex justify-between items-center mb-1 rounded transition-all hover:bg-gray-100 focus:ring animate-[fade-in_.2s_ease-in]"
-                >
-                <button
-                  onClick={() => fillForm(e.id)}
-                  className="text-left underline flex-1 transition-colors hover:brightness-110 focus:ring active:scale-95"
-                >
-                  {e.id} ({e.category})
-                </button>
-                <button
-                  onClick={() => remove(e.id)}
-                  aria-label={`delete ${e.id}`}
-                  className="ml-2 text-red-500 transition-colors hover:brightness-110 focus:ring active:scale-95"
-                >
-                  ✕
-                </button>
-              </li>
-            ))}
-          </ul>
+          {activeTab === 'list' && (
+            <>
+              <div>
+                <label className="block">
+                  <span className="text-sm">Search</span>
+                  <input
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50 transition-all hover:bg-gray-100 focus:ring animate-[fade-in_.2s_ease-in]"
+                    aria-label="search credentials"
+                  />
+                </label>
+              </div>
+              <ul>
+                {filtered.map((e) => (
+                  <li
+                    key={e.id}
+                    tabIndex={0}
+                    className="flex justify-between items-center mb-1 rounded transition-all hover:bg-gray-100 focus:ring animate-[fade-in_.2s_ease-in]"
+                  >
+                    <button
+                      onClick={() => fillForm(e.id)}
+                      className="text-left underline flex-1 transition-colors hover:brightness-110 focus:ring active:scale-95"
+                    >
+                      {e.id} ({e.category})
+                    </button>
+                    <button
+                      onClick={() => remove(e.id)}
+                      aria-label={`delete ${e.id}`}
+                      className="ml-2 text-red-500 transition-colors hover:brightness-110 focus:ring active:scale-95"
+                    >
+                      ✕
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+          {activeTab === 'add' && (
             <form onSubmit={addOrUpdate} className="space-y-1">
               <input
                 placeholder="Service"
@@ -288,7 +308,7 @@ export default function App() {
                 className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50 transition-all hover:bg-gray-100 focus:ring animate-[fade-in_.2s_ease-in]"
                 aria-label="username"
               />
-            <div className="flex flex-col space-y-1">
+              <div className="flex flex-col space-y-1">
                 <div className="flex items-center">
                   <input
                     placeholder="Password"
@@ -298,19 +318,19 @@ export default function App() {
                     className="w-full px-2 py-1 border border-gray-300 border-opacity-70 rounded bg-gray-50 flex-1 transition-all hover:bg-gray-100 focus:ring animate-[fade-in_.2s_ease-in]"
                     aria-label="password"
                   />
-                <button
-                  type="button"
-                  onClick={() => setShowPwd((s) => !s)}
-                  aria-label={showPwd ? 'hide password' : 'show password'}
-                  className="ml-1 text-sm underline transition-colors hover:brightness-110 focus:ring active:scale-95"
-                >
-                  {showPwd ? 'Ocultar' : 'Mostrar'}
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowPwd((s) => !s)}
+                    aria-label={showPwd ? 'hide password' : 'show password'}
+                    className="ml-1 text-sm underline transition-colors hover:brightness-110 focus:ring active:scale-95"
+                  >
+                    {showPwd ? 'Ocultar' : 'Mostrar'}
+                  </button>
+                </div>
+                <div>
+                  <PasswordGenerator onGenerate={(pwd) => setForm({ ...form, password: pwd })} />
+                </div>
               </div>
-              <div>
-                <PasswordGenerator onGenerate={(pwd) => setForm({ ...form, password: pwd })} />
-              </div>
-            </div>
               <div>
                 <input
                   placeholder="Category"
@@ -326,13 +346,14 @@ export default function App() {
                   ))}
                 </datalist>
               </div>
-            <button
-              type="submit"
-              className="px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded shadow-sm hover:shadow transition-colors hover:brightness-110 focus:ring active:scale-95"
-            >
-              Save
-            </button>
-          </form>
+              <button
+                type="submit"
+                className="px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded shadow-sm hover:shadow transition-colors hover:brightness-110 focus:ring active:scale-95"
+              >
+                Save
+              </button>
+            </form>
+          )}
         </div>
       )}
       </div>
