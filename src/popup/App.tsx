@@ -22,6 +22,8 @@ type VaultEntry = {
   url: string;
 };
 
+const emptyForm = { id: '', username: '', password: '', category: '', url: '' };
+
 export default function App() {
   const [master, setMaster] = useState('');
   const [newMaster, setNewMaster] = useState('');
@@ -32,7 +34,8 @@ export default function App() {
   const [entries, setEntries] = useState<VaultEntry[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [search, setSearch] = useState('');
-  const [form, setForm] = useState({ id: '', username: '', password: '', category: '', url: '' });
+  const [form, setForm] = useState(emptyForm);
+  const [isEditing, setIsEditing] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
   const [activeTab, setActiveTab] = useState<'list' | 'add'>('list');
   const [copied, setCopied] = useState<string | null>(null);
@@ -141,7 +144,8 @@ export default function App() {
       .concat({ id: form.id, username: form.username, category: form.category, url: form.url });
     setEntries(updated);
     chrome.storage.local.set({ vaultIndex: updated });
-    setForm({ id: '', username: '', password: '', category: '', url: '' });
+    setForm(emptyForm);
+    setIsEditing(false);
   };
 
   const remove = async (id: string) => {
@@ -156,6 +160,7 @@ export default function App() {
     if (stored) {
       const obj = JSON.parse(stored);
       setForm({ id, username: obj.username, password: obj.password, category: obj.category, url: obj.url || '' });
+      setIsEditing(true);
     }
   };
 
@@ -270,7 +275,11 @@ export default function App() {
               Credenciais
             </button>
             <button
-              onClick={() => setActiveTab('add')}
+              onClick={() => {
+                setForm(emptyForm);
+                setIsEditing(false);
+                setActiveTab('add');
+              }}
               className={`px-3 py-1.5 transition-colors ${activeTab === 'add' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} hover:bg-blue-600`}
             >
               Nova
@@ -396,12 +405,26 @@ export default function App() {
                   ))}
                 </datalist>
               </div>
-              <button
-                type="submit"
-                className="px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded shadow-sm hover:shadow transition-colors hover:brightness-110 focus:ring active:scale-95"
-              >
-                Save
-              </button>
+              <div className="flex space-x-2">
+                {isEditing && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setForm(emptyForm);
+                      setIsEditing(false);
+                    }}
+                    className="px-3 py-1.5 bg-gray-300 hover:bg-gray-400 rounded shadow-sm hover:shadow transition-colors hover:brightness-110 focus:ring active:scale-95"
+                  >
+                    Cancelar
+                  </button>
+                )}
+                <button
+                  type="submit"
+                  className="px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded shadow-sm hover:shadow transition-colors hover:brightness-110 focus:ring active:scale-95"
+                >
+                  Save
+                </button>
+              </div>
             </form>
           )}
         </div>
