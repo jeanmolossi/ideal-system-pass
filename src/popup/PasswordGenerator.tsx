@@ -31,13 +31,13 @@ export default function PasswordGenerator({ onGenerate }: Props) {
           max={64}
           value={length}
           onChange={(e) => setLength(Number(e.target.value))}
-          className="w-16 p-1 border rounded text-sm"
+          className="w-20 px-2 py-1 border border-gray-300 border-opacity-70 rounded text-sm bg-gray-50"
           aria-label="password length"
         />
         <select
           value={complexity}
           onChange={(e) => setComplexity(e.target.value as Complexity)}
-          className="flex-1 p-1 border rounded text-sm"
+          className="flex-1 px-2 py-1 border border-gray-300 border-opacity-70 rounded text-sm bg-gray-50"
           aria-label="password complexity"
         >
           <option value="simple">Simple</option>
@@ -48,7 +48,7 @@ export default function PasswordGenerator({ onGenerate }: Props) {
           type="button"
           onClick={generate}
           aria-label="generate password"
-          className="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded"
+          className="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white rounded shadow-sm hover:shadow transition-colors hover:brightness-110 focus:ring active:scale-95"
         >
           Generate
         </button>
@@ -60,7 +60,7 @@ export default function PasswordGenerator({ onGenerate }: Props) {
             type="button"
             onClick={copy}
             aria-label="copy password"
-            className="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded"
+            className="px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded shadow-sm hover:shadow transition-colors hover:brightness-110 focus:ring active:scale-95"
           >
             Copy
           </button>
